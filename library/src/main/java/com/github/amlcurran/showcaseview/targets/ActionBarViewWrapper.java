@@ -35,7 +35,16 @@ class ActionBarViewWrapper {
     private Class mAbsActionBarViewClass;
 
     public ActionBarViewWrapper(ViewParent actionBarView) {
-        if (!actionBarView.getClass().getName().contains("ActionBarView")) {
+        if (!actionBarView.getClass().getName().contains("Toolbar")) {
+            String previousP = actionBarView.getClass().getName();
+            actionBarView = actionBarView.getParent();
+            String throwP = actionBarView.getClass().getName();
+            if (!actionBarView.getClass().getName().contains("Toolbar")) {
+                throw new IllegalStateException("Cannot find ActionBarView for " +
+                        "Activity, instead found " + previousP + " and " + throwP);
+            }
+        }
+        /*if (!actionBarView.getClass().getName().contains("ActionBarView")) {
             String previousP = actionBarView.getClass().getName();
             actionBarView = actionBarView.getParent();
             String throwP = actionBarView.getClass().getName();
@@ -43,7 +52,7 @@ class ActionBarViewWrapper {
                 throw new IllegalStateException("Cannot find ActionBarView for " +
                         "Activity, instead found " + previousP + " and " + throwP);
             }
-        }
+        }*/
         mActionBarView = actionBarView;
         mActionBarViewClass = actionBarView.getClass();
         mAbsActionBarViewClass = actionBarView.getClass().getSuperclass();
@@ -86,7 +95,7 @@ class ActionBarViewWrapper {
      */
     public View getOverflowView() {
         try {
-            Field actionMenuPresenterField = mAbsActionBarViewClass.getDeclaredField("mActionMenuPresenter");
+            Field actionMenuPresenterField = mActionBarViewClass.getDeclaredField("mOuterActionMenuPresenter");
             actionMenuPresenterField.setAccessible(true);
             Object actionMenuPresenter = actionMenuPresenterField.get(mActionBarView);
             Field overflowButtonField = actionMenuPresenter.getClass().getDeclaredField("mOverflowButton");

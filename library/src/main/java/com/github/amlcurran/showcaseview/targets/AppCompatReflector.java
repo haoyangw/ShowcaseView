@@ -17,8 +17,10 @@
 package com.github.amlcurran.showcaseview.targets;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewParent;
+import android.view.Window;
 
 /**
  * Created by Alex on 27/10/13.
@@ -33,11 +35,23 @@ class AppCompatReflector implements Reflector {
 
     @Override
     public ViewParent getActionBarView() {
-        return getHomeButton().getParent().getParent();
+        return (ViewParent)getHomeButton();
+        //return getHomeButton().getParent().getParent();
     }
 
     @Override
     public View getHomeButton() {
+        Window window = mActivity.getWindow();
+        View v = window.getDecorView();
+        int resId = mActivity.getResources().getIdentifier("action_bar", "id", mActivity.getPackageName());
+        View homeButton = v.findViewById(resId);
+        if(homeButton == null) {
+            Log.e("Transition Advanced", "Error!!!");
+            throw new RuntimeException(
+                    "insertShowcaseViewWithType cannot be used when the theme " +
+                            "has no ActionBar");
+        }
+        /*
         View homeButton = mActivity.findViewById(android.R.id.home);
         if (homeButton != null) {
             return homeButton;
@@ -48,7 +62,7 @@ class AppCompatReflector implements Reflector {
             throw new RuntimeException(
                     "insertShowcaseViewWithType cannot be used when the theme " +
                             "has no ActionBar");
-        }
+        }*/
         return homeButton;
     }
 
