@@ -63,8 +63,13 @@ class ActionBarViewWrapper {
      */
     public View getSpinnerView() {
         try {
-            Field spinnerField = mActionBarViewClass.getDeclaredField("mSpinner");
+            Field toolbarWrapperField = mActionBarViewClass.getDeclaredField("mWrapper");
+            toolbarWrapperField.setAccessible(true);
+            Object toolbarWrapper = toolbarWrapperField.get(mActionBarView);
+            Field spinnerField = toolbarWrapper.getClass().getDeclaredField("mSpinner");
             spinnerField.setAccessible(true);
+            /*Field spinnerField = mActionBarViewClass.getDeclaredField("mSpinner");
+            spinnerField.setAccessible(true);*/
             return (View) spinnerField.get(mActionBarView);
         } catch (NoSuchFieldException e) {
             Log.e("TAG", "Failed to find actionbar spinner", e);
@@ -79,7 +84,8 @@ class ActionBarViewWrapper {
      */
     public View getTitleView() {
         try {
-            Field mTitleViewField = mActionBarViewClass.getDeclaredField("mTitleView");
+            Field mTitleViewField = mActionBarViewClass.getDeclaredField("mTitleTextView");
+            //Field mTitleViewField = mActionBarViewClass.getDeclaredField("mTitleView");
             mTitleViewField.setAccessible(true);
             return (View) mTitleViewField.get(mActionBarView);
         } catch (NoSuchFieldException e) {
@@ -101,6 +107,12 @@ class ActionBarViewWrapper {
             Field overflowButtonField = actionMenuPresenter.getClass().getDeclaredField("mOverflowButton");
             overflowButtonField.setAccessible(true);
             return (View) overflowButtonField.get(actionMenuPresenter);
+            /*Field actionMenuPresenterField = mAbsActionBarViewClass.getDeclaredField("mActionMenuPresenter");
+            actionMenuPresenterField.setAccessible(true);
+            Object actionMenuPresenter = actionMenuPresenterField.get(mActionBarView);
+            Field overflowButtonField = actionMenuPresenter.getClass().getDeclaredField("mOverflowButton");
+            overflowButtonField.setAccessible(true);
+            return (View) overflowButtonField.get(actionMenuPresenter);*/
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (NoSuchFieldException e) {
@@ -116,7 +128,9 @@ class ActionBarViewWrapper {
     public View getMediaRouterButtonView() {
         try {
             Field actionMenuPresenterField =
-                    mActionBarViewClass.getDeclaredField("mOptionsMenu");
+                    mActionBarViewClass.getDeclaredField("mMenu");
+            //Field actionMenuPresenterField =
+            //        mActionBarViewClass.getDeclaredField("mOptionsMenu");
             actionMenuPresenterField.setAccessible(true);
             Object optionsMenu = actionMenuPresenterField.get(mActionBarView);
 
@@ -161,7 +175,8 @@ class ActionBarViewWrapper {
 
     public View getActionItem(int actionItemId) {
         try {
-            Field actionMenuPresenterField = mAbsActionBarViewClass.getDeclaredField("mActionMenuPresenter");
+            Field actionMenuPresenterField = mActionBarViewClass.getDeclaredField("mOuterActionMenuPresenter");
+            //Field actionMenuPresenterField = mAbsActionBarViewClass.getDeclaredField("mActionMenuPresenter");
             actionMenuPresenterField.setAccessible(true);
             Object actionMenuPresenter = actionMenuPresenterField.get(mActionBarView);
 
