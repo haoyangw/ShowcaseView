@@ -192,7 +192,8 @@ class ActionBarViewWrapper {
                         .getSuperclass().getSuperclass().getDeclaredField("mChildren");
             } else if (menuView.getClass().toString().contains("android.support.v7")) {
                 mChField = menuView.getClass().getSuperclass().getSuperclass()
-                        .getSuperclass().getDeclaredField("mChildren");
+                        .getDeclaredField("mChildren");
+                        //.getSuperclass().getDeclaredField("mChildren");
             } else {
                 mChField = menuView.getClass().getSuperclass().getSuperclass()
                         .getDeclaredField("mChildren");
